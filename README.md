@@ -10,6 +10,33 @@ A modern, single-page Web3 portal for exploring DeFi, games, and blockchain cont
 
 Coming soon at [ricobenzia.com](http://ricobenzia.com)
 
+---
+
+## 📸 Screenshots
+
+### Hero Section
+![Hero](public/screenshots/hero.png)
+
+### About Us
+![About](public/screenshots/about.png)
+
+### Club House
+![Club House](public/screenshots/clubhouse.png)
+
+### Gameroom
+![Gameroom](public/screenshots/gameroom.png)
+
+### Charts & Analytics
+![Charts](public/screenshots/charts.png)
+
+### DeFi Projects
+![DeFi](public/screenshots/defi.png)
+
+### The Vault (NFT-Gated)
+![Vault](public/screenshots/vault.png)
+
+---
+
 ## ✨ Features
 
 ### Core Functionality
@@ -32,6 +59,8 @@ Coming soon at [ricobenzia.com](http://ricobenzia.com)
 | **Vault** | NFT-gated premium video content |
 | **Contact** | Contact form and social links |
 
+---
+
 ## 🛠️ Tech Stack
 
 - **Framework:** React 19 + TypeScript
@@ -41,6 +70,8 @@ Coming soon at [ricobenzia.com](http://ricobenzia.com)
 - **Wallet:** RainbowKit + wagmi + viem
 - **Charts:** TradingView Widgets
 - **Network:** Polygon (pre-configured)
+
+---
 
 ## 🚀 Getting Started
 
@@ -72,12 +103,15 @@ npm run build
 
 Output will be in the `dist/` folder.
 
+---
+
 ## 📁 Project Structure
 
 ```
 ricobenzia/
 ├── public/
-│   └── assets/           # Logo and images
+│   ├── assets/           # Logo and images
+│   └── screenshots/      # README screenshots
 ├── src/
 │   ├── components/
 │   │   ├── Navbar.tsx    # Navigation with smooth scroll
@@ -102,6 +136,8 @@ ricobenzia/
 └── package.json
 ```
 
+---
+
 ## 🎨 Design System
 
 ### Color Palette
@@ -117,6 +153,8 @@ ricobenzia/
 - **Display:** Orbitron (headings)
 - **Body:** Inter (content)
 
+---
+
 ## 🔐 NFT Gating (Future)
 
 The vault section is prepared for NFT-gated content. To enable:
@@ -125,11 +163,15 @@ The vault section is prepared for NFT-gated content. To enable:
 2. Update the contract address in `src/hooks/useNFTGate.ts`
 3. Implement the balance check using wagmi's `useReadContract`
 
+---
+
 ## 📱 Responsive Breakpoints
 
 - **Mobile:** < 640px
 - **Tablet:** 640px - 1024px
 - **Desktop:** > 1024px
+
+---
 
 ## 🔗 External Integrations
 
@@ -137,13 +179,19 @@ The vault section is prepared for NFT-gated content. To enable:
 - **RainbowKit** - Wallet connection
 - **Polygon** - Default network
 
+---
+
 ## 📄 Legal
 
 This website is for **educational and entertainment purposes only**. Nothing constitutes financial, investment, legal, or tax advice. Always DYOR.
 
+---
+
 ## 🤝 Contributing
 
 This is a private project. For inquiries, contact via the website.
+
+---
 
 ## 📜 License
 
