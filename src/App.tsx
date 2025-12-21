@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -11,6 +12,8 @@ import DeFi from './components/DeFi';
 import GatedVault from './components/GatedVault';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import Admin from './routes/Admin';
+import VaultRoom from './routes/VaultRoom';
 
 // Disclaimer Modal Component
 function DisclaimerModal({ onAccept }: { onAccept: () => void }) {
@@ -143,39 +146,54 @@ function App() {
   };
 
   return (
-    <>
-      <AnimatePresence mode="wait">
-        {isLoading && <LoadingScreen key="loading" />}
-      </AnimatePresence>
+    <Routes>
+      <Route
+        path="/admin/*"
+        element={<Admin />}
+      />
+      <Route
+        path="/vault/room"
+        element={<VaultRoom />}
+      />
+      <Route
+        path="/*"
+        element={
+          <>
+            <AnimatePresence mode="wait">
+              {isLoading && <LoadingScreen key="loading" />}
+            </AnimatePresence>
 
-      <AnimatePresence>
-        {showDisclaimer && (
-          <DisclaimerModal key="disclaimer" onAccept={handleAcceptDisclaimer} />
-        )}
-      </AnimatePresence>
+            <AnimatePresence>
+              {showDisclaimer && (
+                <DisclaimerModal key="disclaimer" onAccept={handleAcceptDisclaimer} />
+              )}
+            </AnimatePresence>
 
-      {!isLoading && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Navbar />
-          <main>
-            <Hero />
-            <About />
-            <Resources />
-            <ClubHouse />
-            <Gameroom />
-            <Charts />
-            <DeFi />
-            <GatedVault />
-            <Contact />
-          </main>
-          <Footer />
-        </motion.div>
-      )}
-    </>
+            {!isLoading && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Navbar />
+                <main>
+                  <Hero />
+                  <About />
+                  <Resources />
+                  <ClubHouse />
+                  <Gameroom />
+                  <Charts />
+                  <DeFi />
+                  <GatedVault />
+                  <Contact />
+                </main>
+                <Footer />
+              </motion.div>
+            )}
+          </>
+        }
+      />
+    </Routes>
   );
 }
 

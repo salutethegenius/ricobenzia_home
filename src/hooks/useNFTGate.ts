@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useReadContract } from 'wagmi';
+import { erc721Abi } from 'viem';
 
-// NFT Contract Configuration - Replace with actual values when ready
-const NFT_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000';
+// NFT Contract Configuration
+const NFT_CONTRACT_ADDRESS = '0xe732b48CF38cFE538ddE868823379B3c64AA2484' as `0x${string}`;
 
 interface NFTGateResult {
   hasAccess: boolean;
@@ -14,62 +15,43 @@ interface NFTGateResult {
 export function useNFTGate(): NFTGateResult {
   const { address, isConnected } = useAccount();
   const [hasAccess, setHasAccess] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const checkAccess = async () => {
-    if (!address || !isConnected) {
+  // Use wagmi's useReadContract to check NFT balance
+  const { data: balance, isLoading, error: contractError } = useReadContract({
+    address: isConnected && address ? NFT_CONTRACT_ADDRESS : undefined,
+    abi: erc721Abi,
+    functionName: 'balanceOf',
+    args: address ? [address] : undefined,
+    query: {
+      enabled: isConnected && !!address,
+    },
+  });
+
+  // Update hasAccess based on balance
+  useEffect(() => {
+    if (!isConnected || !address) {
+      setHasAccess(false);
+      setError(null);
+      return;
+    }
+
+    if (contractError) {
+      setError(contractError.message);
       setHasAccess(false);
       return;
     }
 
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      // TODO: Implement actual NFT ownership check
-      // When you have your NFT contract deployed, you can use wagmi's useReadContract
-      // to check the balance of the connected wallet
-      //
-      // Example with wagmi:
-      // const { data: balance } = useReadContract({
-      //   address: NFT_CONTRACT_ADDRESS,
-      //   abi: erc721Abi,
-      //   functionName: 'balanceOf',
-      //   args: [address],
-      // });
-      // setHasAccess(balance > 0n);
-
-      // For development: Check if contract address is set
-      if (NFT_CONTRACT_ADDRESS === '0x0000000000000000000000000000000000000000') {
-        // Demo mode - no real NFT check
-        console.log('NFT Gate: Running in demo mode (no contract configured)');
-        setHasAccess(false);
-      } else {
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // TODO: Replace with actual NFT balance check
-        setHasAccess(false);
-      }
-    } catch (err) {
-      console.error('NFT Gate Error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to check NFT ownership');
-      setHasAccess(false);
-    } finally {
-      setIsLoading(false);
+    if (balance !== undefined) {
+      setHasAccess(balance > 0n);
+      setError(null);
     }
+  }, [balance, isConnected, address, contractError]);
+
+  const checkAccess = async () => {
+    // Access is automatically checked via useReadContract hook
+    // This function is kept for API compatibility
   };
-
-  // Check access when account changes
-  useEffect(() => {
-    if (isConnected && address) {
-      checkAccess();
-    } else {
-      setHasAccess(false);
-      setIsLoading(false);
-    }
-  }, [address, isConnected]);
 
   return {
     hasAccess,

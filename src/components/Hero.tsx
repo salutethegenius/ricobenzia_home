@@ -1,7 +1,15 @@
 import { motion } from 'framer-motion';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useCMS } from '../hooks/useCMS';
 
 export default function Hero() {
+  const { getSectionContent } = useCMS();
+  const content = getSectionContent('hero');
+  
+  // Fallback to hardcoded content if CMS is not available or loading
+  const title = content.title || 'RICO BENZIA';
+  const subtitle = content.subtitle || 'Where the tail ends is where the adventure begins';
+  const description = content.description || 'Freedom Begins with Self Banking';
   return (
     <section id="home" className="relative min-h-screen cosmic-bg overflow-hidden">
       {/* Animated Background Elements */}
@@ -71,8 +79,14 @@ export default function Hero() {
           className="text-5xl md:text-7xl lg:text-8xl font-bold mb-4"
           style={{ fontFamily: 'Orbitron, sans-serif' }}
         >
-          <span className="text-vibrant-green">RICO</span>
-          <span className="text-electric-blue">BENZIA</span>
+          {title.includes('RICO') || title.includes('BENZIA') ? (
+            <>
+              <span className="text-vibrant-green">RICO</span>
+              <span className="text-electric-blue">BENZIA</span>
+            </>
+          ) : (
+            <span className="text-vibrant-green">{title}</span>
+          )}
         </motion.h1>
 
         {/* Slogan */}
@@ -81,10 +95,8 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.8 }}
           className="text-xl md:text-2xl text-clean-white/80 mb-8 max-w-2xl"
-        >
-          Where the tail ends is where the{' '}
-          <span className="text-vibrant-green font-semibold">adventure</span> begins
-        </motion.p>
+          dangerouslySetInnerHTML={{ __html: subtitle.replace(/adventure/g, '<span class="text-vibrant-green font-semibold">adventure</span>') }}
+        />
 
         {/* Mission */}
         <motion.div
@@ -94,7 +106,7 @@ export default function Hero() {
           className="glass rounded-2xl px-10 py-6 mb-10"
         >
           <p className="text-lg text-electric-blue font-medium tracking-wide">
-            Freedom Begins with Self Banking
+            {description}
           </p>
         </motion.div>
 

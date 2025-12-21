@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 const navItems = [
   { id: 'home', label: 'Home' },
@@ -17,6 +19,7 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState('home');
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -95,6 +98,17 @@ export default function Navbar() {
                   {item.label}
                 </motion.button>
               ))}
+              {isAuthenticated && (
+                <Link to="/admin/dashboard">
+                  <motion.button
+                    className="px-4 py-2 rounded-full text-sm font-medium text-clean-white hover:text-vibrant-green border border-cosmic-purple/30 hover:border-vibrant-green transition-all"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Admin
+                  </motion.button>
+                </Link>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
