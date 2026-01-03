@@ -1,4 +1,5 @@
-import { useState, useEffect, Component, ReactNode } from 'react';
+import { useState, useEffect, Component } from 'react';
+import type { ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';

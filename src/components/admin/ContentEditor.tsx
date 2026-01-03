@@ -76,7 +76,7 @@ const sectionFields: Record<string, { field: string; label: string; type: 'text'
 export default function ContentEditor() {
   const { section } = useParams<{ section: string }>();
   const navigate = useNavigate();
-  const { getSectionContent, updateContent, loading, content } = useCMS();
+  const { updateContent, loading, content } = useCMS();
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);

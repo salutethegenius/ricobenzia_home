@@ -97,7 +97,7 @@ export default function PrivacyPolicy() {
               className="prose prose-invert max-w-none"
             >
               <div className="bg-gradient-to-br from-clean-white/5 to-clean-white/[0.02] border border-clean-white/10 rounded-2xl p-8 space-y-8">
-                {privacySections.map((section, index) => {
+                {privacySections.map((section) => {
                   const sectionContent = content[section.key] || section.defaultContent;
                   return (
                     <section key={section.key}>
