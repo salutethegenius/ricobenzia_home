@@ -142,12 +142,12 @@ export default function DeFi() {
           className="text-center mb-12"
         >
           <h2 
-            className="text-4xl md:text-5xl font-bold text-clean-white mb-4"
+            className="text-4xl md:text-5xl font-bold text-clean-white mb-4 text-center"
             style={{ fontFamily: 'Orbitron, sans-serif' }}
           >
             <span className="text-vibrant-green">DeFi</span> Projects
           </h2>
-          <p className="text-clean-white/60 max-w-2xl mx-auto">
+          <p className="text-clean-white/60 max-w-2xl mx-auto text-center">
             Decentralized finance platforms and exchanges we use and recommend.
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-vibrant-green to-electric-blue mx-auto rounded-full mt-6" />

@@ -72,7 +72,7 @@ export default function Resources() {
           >
             <span className="text-vibrant-green">Resources</span>
           </h2>
-          <p className="text-clean-white/60 max-w-2xl mx-auto">
+          <p className="text-clean-white/60 max-w-2xl mx-auto text-center">
             Curated resources to help you navigate the Web3 ecosystem safely and effectively.
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-vibrant-green to-electric-blue mx-auto rounded-full mt-6" />

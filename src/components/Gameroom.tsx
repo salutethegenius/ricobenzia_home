@@ -85,12 +85,12 @@ export default function Gameroom() {
           className="text-center mb-16"
         >
           <h2 
-            className="text-4xl md:text-5xl font-bold text-clean-white mb-4"
+            className="text-4xl md:text-5xl font-bold text-clean-white mb-4 text-center"
             style={{ fontFamily: 'Orbitron, sans-serif' }}
           >
             Game<span className="text-vibrant-green">room</span>
           </h2>
-          <p className="text-clean-white/60 max-w-2xl mx-auto">
+          <p className="text-clean-white/60 max-w-2xl mx-auto text-center">
             Web3 games we play, test, and recommend. Click to join with our referral links.
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-vibrant-green to-electric-blue mx-auto rounded-full mt-6" />

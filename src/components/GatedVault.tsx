@@ -40,7 +40,7 @@ export default function GatedVault() {
           >
             The <span className="text-transparent bg-clip-text bg-gradient-to-r from-cosmic-purple-light to-vibrant-green">Vault</span>
           </h2>
-          <p className="text-clean-white/50 max-w-xl mx-auto">
+          <p className="text-clean-white/50 max-w-xl mx-auto text-center">
             Exclusive video conference room for NFT holders. Connect your wallet and verify ownership to join the meeting.
           </p>
         </motion.div>
@@ -59,17 +59,17 @@ export default function GatedVault() {
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-clean-white mb-2">Connect Your Wallet</h3>
-              <p className="text-clean-white/50 mb-6 max-w-md mx-auto">
+              <p className="text-clean-white/50 mb-6 max-w-md mx-auto text-center">
                 Connect your wallet to check if you have access to the exclusive video conference room.
               </p>
-              <p className="text-sm text-clean-white/30">
+              <p className="text-sm text-clean-white/30 text-center">
                 Scroll up and click "Connect Wallet" to get started.
               </p>
             </div>
           ) : isLoading ? (
             <div className="p-8 rounded-3xl bg-clean-white/5 border border-clean-white/10 text-center">
               <div className="w-12 h-12 border-4 border-vibrant-green border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-clean-white/60">Checking NFT ownership...</p>
+              <p className="text-clean-white/60 text-center">Checking NFT ownership...</p>
             </div>
           ) : hasAccess ? (
             <div className="p-8 rounded-3xl bg-gradient-to-br from-vibrant-green/20 to-vibrant-green/5 border border-vibrant-green/30 text-center">
@@ -79,7 +79,7 @@ export default function GatedVault() {
                 </svg>
               </div>
               <h3 className="text-2xl font-bold text-vibrant-green mb-3">Access Granted!</h3>
-              <p className="text-clean-white/60 mb-8 max-w-md mx-auto">
+              <p className="text-clean-white/60 mb-8 max-w-md mx-auto text-center">
                 Your NFT has been verified. You can now join the exclusive video conference room with other holders.
               </p>
               <Link to="/vault/room">
@@ -91,7 +91,7 @@ export default function GatedVault() {
                   🎥 Join Video Room
                 </motion.button>
               </Link>
-              <p className="text-clean-white/40 text-sm mt-6">
+              <p className="text-clean-white/40 text-sm mt-6 text-center">
                 Opens in a dedicated full-screen experience
               </p>
             </div>
@@ -103,7 +103,7 @@ export default function GatedVault() {
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-clean-white mb-2">NFT Required</h3>
-              <p className="text-clean-white/50 mb-6 max-w-md mx-auto">
+              <p className="text-clean-white/50 mb-6 max-w-md mx-auto text-center">
                 You need to hold our access NFT to join the exclusive video conference room.
               </p>
               <motion.a
