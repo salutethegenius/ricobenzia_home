@@ -10,6 +10,7 @@ export default function Hero() {
   const title = content.title || 'RICO BENZIA';
   const subtitle = content.subtitle || 'Where the tail ends is where the adventure begins';
   const description = content.description || 'Freedom Begins with Self Banking';
+
   return (
     <section id="home" className="relative min-h-screen cosmic-bg overflow-hidden">
       {/* Animated Background Elements */}

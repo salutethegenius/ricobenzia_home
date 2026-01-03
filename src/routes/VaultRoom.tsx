@@ -22,7 +22,9 @@ export default function VaultRoom() {
 
   useEffect(() => {
     // Prevent duplicate initialization (synchronous check for React StrictMode)
-    if (jitsiInitialized || jitsiApiRef.current) return;
+    if (jitsiInitialized || jitsiApiRef.current) {
+      return;
+    }
     jitsiInitialized = true;
     
     if (!containerRef.current || !hasAccess) {
@@ -96,7 +98,7 @@ export default function VaultRoom() {
       }
       jitsiInitialized = false; // Reset on unmount
     };
-  }, [hasAccess]);
+  }, [hasAccess, roomName, userDisplayName]);
 
   // Access denied
   if (!hasAccess && !isLoading) {
@@ -186,4 +188,3 @@ export default function VaultRoom() {
     </div>
   );
 }
-

@@ -11,6 +11,8 @@ const sections = [
   { id: 'charts', name: 'Charts', icon: '📊', description: 'Live BTC/ETH charts and data' },
   { id: 'defi', name: 'DeFi', icon: '💎', description: 'CEX, DEX, and yield farming projects' },
   { id: 'contact', name: 'Contact', icon: '📧', description: 'Contact form and social links' },
+  { id: 'privacy', name: 'Privacy Policy', icon: '🔒', description: 'Privacy policy content and sections' },
+  { id: 'terms', name: 'Terms of Service', icon: '📜', description: 'Terms of service content and sections' },
 ];
 
 export default function Dashboard() {

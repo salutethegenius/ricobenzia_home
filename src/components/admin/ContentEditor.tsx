@@ -44,36 +44,74 @@ const sectionFields: Record<string, { field: string; label: string; type: 'text'
     { field: 'description', label: 'Description', type: 'textarea' },
     { field: 'email', label: 'Email', type: 'text' },
   ],
+  privacy: [
+    { field: 'introduction', label: 'Introduction', type: 'textarea' },
+    { field: 'information_collect', label: 'Information We Collect', type: 'textarea' },
+    { field: 'how_use', label: 'How We Use Your Information', type: 'textarea' },
+    { field: 'cookies', label: 'Cookies and Tracking Technologies', type: 'textarea' },
+    { field: 'third_party', label: 'Third-Party Services', type: 'textarea' },
+    { field: 'data_security', label: 'Data Security', type: 'textarea' },
+    { field: 'your_rights', label: 'Your Rights', type: 'textarea' },
+    { field: 'children_privacy', label: "Children's Privacy", type: 'textarea' },
+    { field: 'changes_policy', label: 'Changes to This Policy', type: 'textarea' },
+    { field: 'contact', label: 'Contact Us', type: 'textarea' },
+  ],
+  terms: [
+    { field: 'acceptance', label: 'Acceptance of Terms', type: 'textarea' },
+    { field: 'educational_purpose', label: 'Educational and Entertainment Purpose', type: 'textarea' },
+    { field: 'risk_disclaimer', label: 'Risk Disclaimer', type: 'textarea' },
+    { field: 'user_conduct', label: 'User Conduct', type: 'textarea' },
+    { field: 'intellectual_property', label: 'Intellectual Property', type: 'textarea' },
+    { field: 'third_party_links', label: 'Third-Party Links and Services', type: 'textarea' },
+    { field: 'no_investment_advice', label: 'No Investment Advice', type: 'textarea' },
+    { field: 'limitation_liability', label: 'Limitation of Liability', type: 'textarea' },
+    { field: 'indemnification', label: 'Indemnification', type: 'textarea' },
+    { field: 'termination', label: 'Termination', type: 'textarea' },
+    { field: 'governing_law', label: 'Governing Law', type: 'textarea' },
+    { field: 'changes_terms', label: 'Changes to Terms', type: 'textarea' },
+    { field: 'contact_info', label: 'Contact Information', type: 'textarea' },
+  ],
 };
 
 export default function ContentEditor() {
   const { section } = useParams<{ section: string }>();
   const navigate = useNavigate();
-  const { getSectionContent, updateContent, loading } = useCMS();
+  const { getSectionContent, updateContent, loading, content } = useCMS();
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
 
   const fields = section ? sectionFields[section] || [] : [];
-  const currentContent = section ? getSectionContent(section) : {};
+  
+  // Get current content for the section
+  const currentContent = section ? (content[section] || {}) : {};
+  
+  // Serialize content for stable dependency comparison
+  const contentKey = JSON.stringify(currentContent);
 
   useEffect(() => {
-    if (section && fields.length > 0) {
-      const initialData: Record<string, string> = {};
-      fields.forEach((field) => {
-        const value = currentContent[field.field];
-        if (value) {
-          initialData[field.field] = 
-            field.type === 'json' 
-              ? JSON.stringify(value, null, 2)
-              : String(value);
-        } else {
-          initialData[field.field] = '';
-        }
-      });
-      setFormData(initialData);
+    // Wait for loading to complete before initializing form
+    if (!section || fields.length === 0 || loading) {
+      return;
     }
-  }, [section, currentContent]);
+
+    const initialData: Record<string, string> = {};
+    fields.forEach((field) => {
+      const value = currentContent[field.field];
+      if (value !== undefined && value !== null && value !== '') {
+        initialData[field.field] = 
+          field.type === 'json' 
+            ? JSON.stringify(value, null, 2)
+            : String(value);
+      } else {
+        initialData[field.field] = '';
+      }
+    });
+    
+    // Always set formData when content is loaded (even if empty)
+    setFormData(initialData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [section, loading, fields.length, contentKey]);
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -88,11 +126,15 @@ export default function ContentEditor() {
     try {
       const updates: ContentUpdate[] = fields.map((fieldDef) => {
         const value = formData[fieldDef.field] || '';
+        let parsedValue;
+        if (fieldDef.type === 'json' && value) {
+          parsedValue = JSON.parse(value);
+        }
         return {
           section,
           field: fieldDef.field,
           value: fieldDef.type === 'json' 
-            ? (value ? JSON.parse(value) : {})
+            ? (parsedValue || {})
             : value,
         };
       });
@@ -133,7 +175,14 @@ export default function ContentEditor() {
             <h1 className="text-2xl font-bold text-clean-white mb-2" style={{ fontFamily: 'Orbitron, sans-serif' }}>
               Edit <span className="text-vibrant-green capitalize">{section}</span>
             </h1>
-            <p className="text-clean-white/50 text-sm">Update content for this section</p>
+            <p className="text-clean-white/50 text-sm">
+              {loading ? 'Loading content...' : 'Update content for this section'}
+            </p>
+            {!loading && Object.keys(currentContent).length === 0 && (
+              <p className="text-yellow-400/70 text-xs mt-1">
+                No existing content found. Fill in the fields below to create content.
+              </p>
+            )}
           </div>
           <div className="flex items-center gap-4">
             <motion.button
@@ -147,13 +196,21 @@ export default function ContentEditor() {
           </div>
         </motion.div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="flex items-center justify-center py-12">
+            <div className="w-12 h-12 border-4 border-vibrant-green border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+
         {/* Form */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-6"
-        >
-          {fields.map((fieldDef) => (
+        {!loading && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            {fields.map((fieldDef) => (
             <div key={fieldDef.field} className="p-6 rounded-2xl bg-gradient-to-br from-clean-white/5 to-clean-white/[0.02] border border-clean-white/10">
               <label className="block text-clean-white font-medium mb-2">
                 {fieldDef.label}
@@ -212,6 +269,7 @@ export default function ContentEditor() {
             </motion.button>
           </div>
         </motion.div>
+        )}
       </div>
     </div>
   );

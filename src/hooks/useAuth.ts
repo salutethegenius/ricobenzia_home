@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 
@@ -16,15 +16,26 @@ export function useAuth() {
     loading: true,
     error: null,
   });
+  const isInitializedRef = useRef(false);
 
   useEffect(() => {
+    // Prevent multiple initializations in React StrictMode
+    if (isInitializedRef.current) return;
+    isInitializedRef.current = true;
+    
     // Get initial session
     supabase.auth.getSession().then(({ data: { session }, error }) => {
-      setAuthState({
-        user: session?.user ?? null,
-        session,
-        loading: false,
-        error: error?.message ?? null,
+      setAuthState((prev) => {
+        // Only update if still loading to prevent race conditions
+        if (prev.loading) {
+          return {
+            user: session?.user ?? null,
+            session,
+            loading: false,
+            error: error?.message ?? null,
+          };
+        }
+        return prev;
       });
     });
 
@@ -40,7 +51,10 @@ export function useAuth() {
       });
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      isInitializedRef.current = false;
+    };
   }, []);
 
   const signIn = async (email: string, password: string) => {

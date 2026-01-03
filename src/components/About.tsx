@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { useCMS } from '../hooks/useCMS';
 
 export default function About() {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const { getSectionContent } = useCMS();
   const content = getSectionContent('about');
@@ -177,7 +177,7 @@ export default function About() {
                 </div>
                 
                 {/* Info */}
-                <div className="text-center md:text-left">
+                <div className="text-center">
                   <h4 className="text-2xl font-bold text-vibrant-green mb-1">RicoBenz</h4>
                   <p className="text-electric-blue font-medium mb-4">Founder & Web3 Explorer</p>
                   <p className="text-clean-white/50 text-sm leading-relaxed max-w-sm">

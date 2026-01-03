@@ -28,10 +28,29 @@
 }
 
 /* Base Styles */
-* {
-  margin: 0;
-  padding: 0;
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+/* Reset margins only on specific elements, not all elements */
+/* This allows Tailwind margin utilities (like mx-auto) to work correctly */
+body,
+h1, h2, h3, h4, h5, h6,
+p, ul, ol, li,
+blockquote, pre,
+figure, figcaption {
+  margin: 0;
+}
+
+/* Reset padding only on specific elements, not all elements */
+/* This allows Tailwind padding utilities to work correctly */
+body,
+h1, h2, h3, h4, h5, h6,
+p, ul, ol, li,
+blockquote, pre {
+  padding: 0;
 }
 
 html {
@@ -100,13 +119,11 @@ body {
   border: 1px solid rgba(124, 252, 0, 0.2);
 }
 
-/* Section Transitions */
+/* Section Base Styles */
 section {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
+  /* Removed flex centering to allow proper padding behavior */
+  /* Components can add min-height and flex as needed */
 }
 
 /* Cosmic Background Pattern */

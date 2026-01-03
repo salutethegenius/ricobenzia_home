@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Component, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -14,6 +14,63 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import Admin from './routes/Admin';
 import VaultRoom from './routes/VaultRoom';
+import PrivacyPolicy from './routes/PrivacyPolicy';
+import TermsOfService from './routes/TermsOfService';
+
+// Error Boundary Component
+interface ErrorBoundaryProps {
+  children: ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
+
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Error caught by boundary:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-space-dark flex items-center justify-center p-4">
+          <div className="text-center max-w-md">
+            <div className="w-20 h-20 rounded-2xl bg-red-500/20 flex items-center justify-center mx-auto mb-6">
+              <svg className="w-10 h-10 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold text-clean-white mb-4" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+              Something went <span className="text-red-400">wrong</span>
+            </h1>
+            <p className="text-clean-white/60 mb-6">
+              We encountered an unexpected error. Please try refreshing the page.
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-8 py-3 rounded-full bg-gradient-to-r from-vibrant-green to-electric-blue text-space-dark font-bold"
+            >
+              Refresh Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 // Disclaimer Modal Component
 function DisclaimerModal({ onAccept }: { onAccept: () => void }) {
@@ -140,60 +197,71 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
+
   const handleAcceptDisclaimer = () => {
     localStorage.setItem('ricobenzia_disclaimer_accepted', 'true');
     setShowDisclaimer(false);
   };
 
   return (
-    <Routes>
-      <Route
-        path="/admin/*"
-        element={<Admin />}
-      />
-      <Route
-        path="/vault/room"
-        element={<VaultRoom />}
-      />
-      <Route
-        path="/*"
-        element={
-          <>
-            <AnimatePresence mode="wait">
-              {isLoading && <LoadingScreen key="loading" />}
-            </AnimatePresence>
+    <ErrorBoundary>
+      <Routes>
+        <Route
+          path="/admin/*"
+          element={<Admin />}
+        />
+        <Route
+          path="/vault/room"
+          element={<VaultRoom />}
+        />
+        <Route
+          path="/privacy-policy"
+          element={<PrivacyPolicy />}
+        />
+        <Route
+          path="/terms-of-service"
+          element={<TermsOfService />}
+        />
+        <Route
+          path="/*"
+          element={
+            <>
+              <AnimatePresence mode="wait">
+                {isLoading && <LoadingScreen key="loading" />}
+              </AnimatePresence>
 
-            <AnimatePresence>
-              {showDisclaimer && (
-                <DisclaimerModal key="disclaimer" onAccept={handleAcceptDisclaimer} />
+              <AnimatePresence>
+                {showDisclaimer && (
+                  <DisclaimerModal key="disclaimer" onAccept={handleAcceptDisclaimer} />
+                )}
+              </AnimatePresence>
+
+              {!isLoading && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Navbar />
+                  <main>
+                    <Hero />
+                    <About />
+                    <Resources />
+                    <ClubHouse />
+                    <Gameroom />
+                    <Charts />
+                    <DeFi />
+                    <GatedVault />
+                    <Contact />
+                  </main>
+                  <Footer />
+                </motion.div>
               )}
-            </AnimatePresence>
-
-            {!isLoading && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Navbar />
-                <main>
-                  <Hero />
-                  <About />
-                  <Resources />
-                  <ClubHouse />
-                  <Gameroom />
-                  <Charts />
-                  <DeFi />
-                  <GatedVault />
-                  <Contact />
-                </main>
-                <Footer />
-              </motion.div>
-            )}
-          </>
-        }
-      />
-    </Routes>
+            </>
+          }
+        />
+      </Routes>
+    </ErrorBoundary>
   );
 }
 

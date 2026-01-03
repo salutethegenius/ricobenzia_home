@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import type { ContentItem, ContentUpdate } from '../lib/supabase';
 
@@ -16,7 +16,7 @@ export function useCMS() {
   });
 
   // Fetch all content
-  const fetchContent = async () => {
+  const fetchContent = useCallback(async () => {
     setState((prev) => ({ ...prev, loading: true, error: null }));
     
     try {
@@ -49,7 +49,7 @@ export function useCMS() {
         error: err instanceof Error ? err.message : 'Failed to fetch content',
       });
     }
-  };
+  }, []);
 
   // Fetch content for a specific section
   const getSectionContent = (section: string): Record<string, any> => {
@@ -101,7 +101,7 @@ export function useCMS() {
 
   useEffect(() => {
     fetchContent();
-  }, []);
+  }, [fetchContent]);
 
   return {
     ...state,

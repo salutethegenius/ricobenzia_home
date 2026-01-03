@@ -5,6 +5,7 @@ import { useRef, useEffect } from 'react';
 const chartSymbols = [
   { symbol: 'BTCUSD', name: 'Bitcoin', color: '#F7931A' },
   { symbol: 'ETHUSD', name: 'Ethereum', color: '#627EEA' },
+  { symbol: 'XRPUSD', name: 'XRP', color: '#0085C3' },
 ];
 
 const dataResources = [
@@ -40,6 +41,7 @@ const dataResources = [
     color: 'from-purple-500/20 to-purple-500/5',
     borderColor: 'hover:border-purple-500/50',
   },
+  
 ];
 
 // TradingView Widget Component
@@ -47,34 +49,71 @@ function TradingViewWidget({ symbol }: { symbol: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    const container = containerRef.current;
+    if (!container) return;
     
     // Clear any existing content
-    containerRef.current.innerHTML = '';
+    container.innerHTML = '';
     
-    const script = document.createElement('script');
-    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
-    script.type = 'text/javascript';
-    script.async = true;
-    script.innerHTML = JSON.stringify({
-      symbol: `BINANCE:${symbol}`,
-      width: '100%',
-      height: '100%',
-      locale: 'en',
-      dateRange: '12M',
-      colorTheme: 'dark',
-      isTransparent: true,
-      autosize: true,
-      largeChartUrl: '',
-    });
+    // Create container div for the widget
+    const widgetContainer = document.createElement('div');
+    widgetContainer.className = 'tradingview-widget-container';
+    widgetContainer.style.height = '100%';
+    widgetContainer.style.width = '100%';
     
-    containerRef.current.appendChild(script);
+    const widgetDiv = document.createElement('div');
+    widgetDiv.className = 'tradingview-widget-container__widget';
+    widgetDiv.style.height = '100%';
+    widgetDiv.style.width = '100%';
+    widgetContainer.appendChild(widgetDiv);
+    
+    // Append container first, then add script
+    container.appendChild(widgetContainer);
+    
+    // Small delay to ensure DOM is ready
+    const timeoutId = setTimeout(() => {
+      const script = document.createElement('script');
+      script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
+      script.type = 'text/javascript';
+      script.async = true;
+      script.innerHTML = JSON.stringify({
+        symbol: `BINANCE:${symbol}`,
+        width: '100%',
+        height: '100%',
+        locale: 'en',
+        interval: 'D',
+        timezone: 'Etc/UTC',
+        theme: 'dark',
+        style: '1', // 1 = Candlesticks
+        hide_top_toolbar: true,
+        hide_legend: false,
+        allow_symbol_change: false,
+        save_image: false,
+        calendar: false,
+        hide_volume: true,
+        support_host: 'https://www.tradingview.com',
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+        gridColor: 'rgba(124, 252, 0, 0.06)',
+      });
+      
+      if (widgetContainer.parentNode) {
+        widgetContainer.appendChild(script);
+      }
+    }, 100);
+    
+    // Cleanup function
+    return () => {
+      clearTimeout(timeoutId);
+      if (container) {
+        container.innerHTML = '';
+      }
+    };
   }, [symbol]);
 
   return (
     <div 
       ref={containerRef} 
-      className="h-[280px] rounded-xl overflow-hidden"
+      className="h-[350px] rounded-xl overflow-hidden"
     />
   );
 }
