@@ -1,104 +1,18 @@
-import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useAccount } from 'wagmi';
 import { useNFTGate } from '../hooks/useNFTGate';
 
-// Track initialization globally to prevent StrictMode double-init
-let jitsiInitialized = false;
-
 export default function VaultRoom() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const jitsiApiRef = useRef<any>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
   const { address } = useAccount();
   const { hasAccess, isLoading } = useNFTGate();
   
   const roomName = 'ricobenzia-vault-community';
+  const jitsiUrl = `https://meet.jit.si/${roomName}`;
 
   const userDisplayName = address 
     ? `${address.slice(0, 6)}...${address.slice(-4)}`
     : 'Guest';
-
-  useEffect(() => {
-    // Prevent duplicate initialization (synchronous check for React StrictMode)
-    if (jitsiInitialized || jitsiApiRef.current) {
-      return;
-    }
-    jitsiInitialized = true;
-    
-    if (!containerRef.current || !hasAccess) {
-      jitsiInitialized = false;
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.src = 'https://meet.jit.si/external_api.js';
-    script.async = true;
-
-    script.onload = () => {
-      if (!containerRef.current) return;
-      
-      // @ts-ignore
-      const domain = import.meta.env.VITE_JITSI_DOMAIN || 'meet.jit.si';
-      const options = {
-        roomName: roomName,
-        width: '100%',
-        height: '100%',
-        parentNode: containerRef.current,
-        configOverwrite: {
-          startWithAudioMuted: true,
-          startWithVideoMuted: true,
-          prejoinPageEnabled: true,
-        },
-        interfaceConfigOverwrite: {
-          TOOLBAR_BUTTONS: [
-            'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
-            'fodeviceselection', 'hangup', 'chat', 'settings', 'videoquality', 
-            'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts', 'tileview',
-            'select-background', 'participants-pane', 'toggle-camera'
-          ],
-          SHOW_JITSI_WATERMARK: false,
-          SHOW_WATERMARK_FOR_GUESTS: false,
-        },
-        userInfo: {
-          displayName: userDisplayName,
-        },
-      };
-
-      try {
-        // @ts-ignore
-        const api = new JitsiMeetExternalAPI(domain, options);
-        jitsiApiRef.current = api;
-        
-        // Hide loading screen immediately - Jitsi has its own prejoin UI
-        setIsLoaded(true);
-        
-        api.addEventListener('videoConferenceJoined', () => {
-          console.log('Joined conference');
-        });
-      } catch (err) {
-        console.error('Jitsi API error:', err);
-      }
-    };
-
-    script.onerror = (err) => {
-      console.error('Jitsi script load error:', err);
-    };
-
-    document.body.appendChild(script);
-
-    return () => {
-      if (jitsiApiRef.current) {
-        jitsiApiRef.current.dispose();
-        jitsiApiRef.current = null;
-      }
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
-      jitsiInitialized = false; // Reset on unmount
-    };
-  }, [hasAccess, roomName, userDisplayName]);
 
   // Access denied
   if (!hasAccess && !isLoading) {
@@ -136,11 +50,17 @@ export default function VaultRoom() {
 
   return (
     <div className="min-h-screen bg-space-dark flex flex-col">
+      {/* Background Effects */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-vibrant-green/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-electric-blue/10 rounded-full blur-3xl" />
+      </div>
+
       {/* Header */}
       <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between px-6 py-4 bg-space-dark/95 border-b border-vibrant-green/20"
+        className="flex items-center justify-between px-6 py-4 bg-space-dark/95 border-b border-vibrant-green/20 relative z-10"
       >
         <div className="flex items-center gap-4">
           <Link to="/">
@@ -167,23 +87,97 @@ export default function VaultRoom() {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Exit Room
+            Back to Site
           </motion.button>
         </Link>
       </motion.header>
 
-      {/* Jitsi Container */}
-      <div className="flex-1 relative" style={{ minHeight: 'calc(100vh - 72px)' }}>
-        {!isLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center bg-space-dark z-10">
-            <div className="text-center">
-              <div className="w-16 h-16 border-4 border-vibrant-green border-t-transparent rounded-full animate-spin mx-auto mb-6" />
-              <p className="text-clean-white/60 text-lg">Loading video room...</p>
-              <p className="text-clean-white/40 text-sm mt-2">Please allow camera/microphone access when prompted</p>
-            </div>
+      {/* Main Content */}
+      <div className="flex-1 flex items-center justify-center p-6 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-lg"
+        >
+          {/* Video Icon */}
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', delay: 0.2 }}
+            className="w-24 h-24 rounded-3xl bg-gradient-to-br from-vibrant-green/20 to-electric-blue/20 border border-vibrant-green/30 flex items-center justify-center mx-auto mb-8"
+          >
+            <svg className="w-12 h-12 text-vibrant-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+          </motion.div>
+
+          {/* Title */}
+          <h2 
+            className="text-3xl md:text-4xl font-bold text-clean-white mb-4"
+            style={{ fontFamily: 'Orbitron, sans-serif' }}
+          >
+            Ready to <span className="text-vibrant-green">Connect</span>?
+          </h2>
+          
+          <p className="text-clean-white/60 mb-8 leading-relaxed">
+            Join the exclusive RicoBenzia community video room. Connect with fellow NFT holders, 
+            share insights, and be part of the conversation.
+          </p>
+
+          {/* User Info */}
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-clean-white/5 border border-clean-white/10 mb-8">
+            <div className="w-3 h-3 rounded-full bg-vibrant-green animate-pulse" />
+            <span className="text-clean-white/70 text-sm">Joining as: </span>
+            <span className="text-vibrant-green font-medium">{userDisplayName}</span>
           </div>
-        )}
-        <div ref={containerRef} className="absolute inset-0" />
+
+          {/* Join Button */}
+          <div className="space-y-4">
+            <motion.a
+              href={jitsiUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-flex items-center gap-3 px-10 py-4 rounded-full bg-gradient-to-r from-vibrant-green to-electric-blue text-space-dark font-bold text-lg shadow-lg shadow-vibrant-green/25 hover:shadow-vibrant-green/40 transition-shadow"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Join Video Room
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </motion.a>
+
+            <p className="text-clean-white/40 text-sm">
+              Opens in a new tab • No time limits • Free
+            </p>
+          </div>
+
+          {/* Features */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="mt-12 grid grid-cols-3 gap-4"
+          >
+            {[
+              { icon: '🎥', label: 'HD Video' },
+              { icon: '🔒', label: 'Secure' },
+              { icon: '💬', label: 'Live Chat' },
+            ].map((feature) => (
+              <div 
+                key={feature.label}
+                className="p-4 rounded-xl bg-clean-white/5 border border-clean-white/10"
+              >
+                <span className="text-2xl mb-2 block">{feature.icon}</span>
+                <span className="text-clean-white/60 text-sm">{feature.label}</span>
+              </div>
+            ))}
+          </motion.div>
+        </motion.div>
       </div>
     </div>
   );
