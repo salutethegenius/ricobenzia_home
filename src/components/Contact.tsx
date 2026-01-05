@@ -71,7 +71,10 @@ export default function Contact() {
           >
             Get in <span className="text-vibrant-green">Touch</span>
           </h2>
-          <p className="text-clean-white/60 max-w-2xl mx-auto">
+          <p 
+            className="text-clean-white/60 max-w-2xl"
+            style={{ textAlign: 'center', margin: '0 auto' }}
+          >
             Have questions or want to collaborate? Drop us a message.
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-vibrant-green to-electric-blue mx-auto rounded-full mt-6" />

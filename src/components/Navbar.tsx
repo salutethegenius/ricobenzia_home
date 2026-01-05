@@ -76,9 +76,14 @@ export default function Navbar() {
                 alt="RicoBenzia" 
                 className="h-10 lg:h-12 w-auto"
               />
-              <span className="text-vibrant-green font-bold text-lg lg:text-xl tracking-wider hidden sm:block">
-                RICOBENZIA
-              </span>
+              <div className="hidden sm:flex flex-col">
+                <span className="text-vibrant-green font-bold text-lg lg:text-xl tracking-wider">
+                  RICOBENZIA
+                </span>
+                <span className="text-gray-400 text-[9px] lg:text-[10px] tracking-wide leading-tight">
+                  Where The Tail Ends Is Where The Adventure Begins
+                </span>
+              </div>
             </motion.div>
 
             {/* Desktop Navigation */}

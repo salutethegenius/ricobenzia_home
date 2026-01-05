@@ -3,6 +3,7 @@ import { useAuth } from '../hooks/useAuth';
 import Login from '../components/admin/Login';
 import Dashboard from '../components/admin/Dashboard';
 import ContentEditor from '../components/admin/ContentEditor';
+import Messages from '../components/admin/Messages';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading } = useAuth();
@@ -39,6 +40,14 @@ export default function Admin() {
         element={
           <ProtectedRoute>
             <ContentEditor />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="messages"
+        element={
+          <ProtectedRoute>
+            <Messages />
           </ProtectedRoute>
         }
       />

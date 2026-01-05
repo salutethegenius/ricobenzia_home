@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
-import type { ContentItem, ContentUpdate } from '../lib/supabase';
+import type { ContentItem, ContentUpdate, ContentValue } from '../lib/supabase';
 
 interface CMSState {
-  content: Record<string, Record<string, any>>;
+  content: Record<string, Record<string, ContentValue>>;
   loading: boolean;
   error: string | null;
 }
@@ -28,7 +28,7 @@ export function useCMS() {
       if (error) throw error;
 
       // Organize content by section and field
-      const organized: Record<string, Record<string, any>> = {};
+      const organized: Record<string, Record<string, ContentValue>> = {};
       
       data?.forEach((item: ContentItem) => {
         if (!organized[item.section]) {
@@ -52,7 +52,7 @@ export function useCMS() {
   }, []);
 
   // Fetch content for a specific section
-  const getSectionContent = (section: string): Record<string, any> => {
+  const getSectionContent = (section: string): Record<string, ContentValue> => {
     return state.content[section] || {};
   };
 

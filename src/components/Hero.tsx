@@ -7,9 +7,10 @@ export default function Hero() {
   const content = getSectionContent('hero');
   
   // Fallback to hardcoded content if CMS is not available or loading
-  const title = content.title || 'RICO BENZIA';
-  const subtitle = content.subtitle || 'Where the tail ends is where the adventure begins';
-  const description = content.description || 'Freedom Begins with Self Banking';
+  // Convert ContentValue to string for rendering
+  const title = String(content.title || 'RICO BENZIA');
+  const subtitle = String(content.subtitle || 'Where the tail ends is where the adventure begins');
+  const description = String(content.description || 'Freedom Begins with Self Banking');
 
   return (
     <section id="home" className="relative min-h-screen cosmic-bg overflow-hidden">

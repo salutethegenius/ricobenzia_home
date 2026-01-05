@@ -118,7 +118,7 @@ export default function TermsOfService() {
                     <section key={section.key}>
                       <h2 className="text-2xl font-bold text-vibrant-green mb-4">{section.title}</h2>
                       <p className="text-clean-white/70 leading-relaxed whitespace-pre-line">
-                        {sectionContent}
+                        {String(sectionContent)}
                       </p>
                     </section>
                   );

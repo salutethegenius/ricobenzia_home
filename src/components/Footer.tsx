@@ -104,7 +104,7 @@ export default function Footer() {
           {/* Bottom Bar */}
           <div className="text-center md:text-left">
             <p className="text-white/40 text-sm">
-              &copy; {currentYear} RicoBenzia. All rights reserved.
+              &copy; {currentYear} RicoBenzia. All rights reserved. Made with ❤️ // <a href="https://kemisdigital.com" target="_blank" rel="noopener noreferrer" className="hover:text-green-500 transition-colors">KemisDigital</a>
             </p>
           </div>
         </div>

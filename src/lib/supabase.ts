@@ -10,11 +10,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Content table types
+export type ContentValue = string | number | boolean | Record<string, unknown> | unknown[] | null;
+
 export interface ContentItem {
   id: string;
   section: string;
   field: string;
-  value: string | Record<string, any>;
+  value: ContentValue;
   updated_at: string;
   updated_by: string | null;
 }
@@ -22,5 +24,5 @@ export interface ContentItem {
 export interface ContentUpdate {
   section: string;
   field: string;
-  value: string | Record<string, any>;
+  value: ContentValue;
 }

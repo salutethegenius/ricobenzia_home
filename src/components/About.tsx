@@ -10,9 +10,10 @@ export default function About() {
   const content = getSectionContent('about');
   
   // Fallback to hardcoded content if CMS is not available
-  const title = content.title || 'About Us';
-  const mission = content.mission || 'Freedom Begins with Self Banking';
-  const mainContent = content.content || 'A Digital world where we always strive to have a positively productive day. We research, test and use web3 products daily.';
+  // Convert ContentValue to string for rendering
+  const title = String(content.title || 'About Us');
+  const mission = String(content.mission || 'Freedom Begins with Self Banking');
+  const mainContent = String(content.content || 'A Digital world where we always strive to have a positively productive day. We research, test and use web3 products daily.');
 
   return (
     <section id="about" className="relative py-24 bg-space-dark overflow-hidden">

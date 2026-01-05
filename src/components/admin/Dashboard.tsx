@@ -68,6 +68,34 @@ export default function Dashboard() {
           </div>
         </motion.div>
 
+        {/* Messages Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            onClick={() => navigate('/admin/messages')}
+            className="p-6 rounded-2xl bg-gradient-to-br from-vibrant-green/20 to-vibrant-green/5 border border-vibrant-green/30 hover:border-vibrant-green/50 cursor-pointer transition-all"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="text-4xl">📬</div>
+                <div>
+                  <h3 className="text-xl font-bold text-clean-white mb-1">Contact Messages</h3>
+                  <p className="text-clean-white/60 text-sm">View and manage contact form submissions</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg className="w-6 h-6 text-vibrant-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+
         {/* Sections Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sections.map((section, index) => (

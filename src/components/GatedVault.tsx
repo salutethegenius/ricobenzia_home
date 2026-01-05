@@ -40,7 +40,10 @@ export default function GatedVault() {
           >
             The <span className="text-transparent bg-clip-text bg-gradient-to-r from-cosmic-purple-light to-vibrant-green">Vault</span>
           </h2>
-          <p className="text-clean-white/50 max-w-xl mx-auto text-center">
+          <p 
+            className="text-clean-white/50 max-w-xl"
+            style={{ textAlign: 'center', margin: '0 auto' }}
+          >
             Exclusive video conference room for NFT holders. Connect your wallet and verify ownership to join the meeting.
           </p>
         </motion.div>
@@ -59,10 +62,11 @@ export default function GatedVault() {
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-clean-white mb-2">Connect Your Wallet</h3>
-              <p className="text-clean-white/50 mb-6 max-w-md mx-auto text-center">
-                Connect your wallet to check if you have access to the exclusive video conference room.
+              <p className="text-clean-white/50 mb-4">
+                Connect your wallet to check if you have access to the<br />
+                exclusive video conference room.
               </p>
-              <p className="text-sm text-clean-white/30 text-center">
+              <p className="text-sm text-clean-white/30">
                 Scroll up and click "Connect Wallet" to get started.
               </p>
             </div>

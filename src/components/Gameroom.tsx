@@ -90,7 +90,10 @@ export default function Gameroom() {
           >
             Game<span className="text-vibrant-green">room</span>
           </h2>
-          <p className="text-clean-white/60 max-w-2xl mx-auto text-center">
+          <p 
+            className="text-clean-white/60 max-w-2xl"
+            style={{ textAlign: 'center', margin: '0 auto' }}
+          >
             Web3 games we play, test, and recommend. Click to join with our referral links.
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-vibrant-green to-electric-blue mx-auto rounded-full mt-6" />

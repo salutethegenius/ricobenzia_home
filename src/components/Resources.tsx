@@ -67,12 +67,15 @@ export default function Resources() {
           className="text-center mb-12"
         >
           <h2 
-            className="text-4xl md:text-5xl font-bold text-clean-white mb-4"
+            className="text-4xl md:text-5xl font-bold text-clean-white mb-4 text-center"
             style={{ fontFamily: 'Orbitron, sans-serif' }}
           >
             <span className="text-vibrant-green">Resources</span>
           </h2>
-          <p className="text-clean-white/60 max-w-2xl mx-auto text-center">
+          <p 
+            className="text-clean-white/60 max-w-2xl"
+            style={{ textAlign: 'center', margin: '0 auto' }}
+          >
             Curated resources to help you navigate the Web3 ecosystem safely and effectively.
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-vibrant-green to-electric-blue mx-auto rounded-full mt-6" />
