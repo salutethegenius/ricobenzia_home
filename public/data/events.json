@@ -1,0 +1,36 @@
+{
+  "events": [
+    {
+      "id": "1",
+      "title": "Community AMA",
+      "date": "2025-01-15",
+      "time": "2:00 PM EST",
+      "description": "Ask Me Anything session with the team. Bring your questions about DeFi, NFTs, and the future of Web3!",
+      "link": "https://discord.gg/yourlink"
+    },
+    {
+      "id": "2",
+      "title": "NFT Drop Event",
+      "date": "2025-01-20",
+      "time": "12:00 PM EST",
+      "description": "New collection launch event. Be among the first to mint exclusive RicoBenzia NFTs!",
+      "link": "https://opensea.io/collection/yourcollection"
+    },
+    {
+      "id": "3",
+      "title": "DeFi Workshop",
+      "date": "2025-01-25",
+      "time": "6:00 PM EST",
+      "description": "Learn about DeFi strategies and yield farming basics. Perfect for beginners and experienced traders alike.",
+      "link": "https://zoom.us/yourlink"
+    },
+    {
+      "id": "4",
+      "title": "Trading Masterclass",
+      "date": "2025-02-01",
+      "time": "3:00 PM EST",
+      "description": "Advanced trading techniques and market analysis. Learn from experienced traders.",
+      "link": "https://discord.gg/yourlink"
+    }
+  ]
+}

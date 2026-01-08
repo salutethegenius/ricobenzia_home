@@ -1,0 +1,192 @@
+@import "tailwindcss";
+
+/* Custom CSS Variables - Cosmic Palette from Global Bunny */
+:root {
+  --cosmic-purple: #2D1B4E;
+  --cosmic-purple-light: #4A2C7A;
+  --electric-blue: #00BFFF;
+  --electric-blue-glow: #00BFFF40;
+  --vibrant-green: #7CFC00;
+  --vibrant-green-dark: #5BC000;
+  --space-dark: #0D0D2B;
+  --clean-white: #FFFFFF;
+  --glass-bg: rgba(13, 13, 43, 0.7);
+}
+
+/* Custom Tailwind Theme Extension */
+@theme {
+  --color-cosmic-purple: #2D1B4E;
+  --color-cosmic-purple-light: #4A2C7A;
+  --color-electric-blue: #00BFFF;
+  --color-vibrant-green: #7CFC00;
+  --color-vibrant-green-dark: #5BC000;
+  --color-space-dark: #0D0D2B;
+  --color-clean-white: #FFFFFF;
+  
+  --font-display: 'Orbitron', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+/* Base Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Reset margins only on specific elements, not all elements */
+/* This allows Tailwind margin utilities (like mx-auto) to work correctly */
+body,
+h1, h2, h3, h4, h5, h6,
+p, ul, ol, li,
+blockquote, pre,
+figure, figcaption {
+  margin: 0;
+}
+
+/* Reset padding only on specific elements, not all elements */
+/* This allows Tailwind padding utilities to work correctly */
+body,
+h1, h2, h3, h4, h5, h6,
+p, ul, ol, li,
+blockquote, pre {
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--clean-white);
+  color: var(--space-dark);
+  overflow-x: hidden;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--space-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--cosmic-purple);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--vibrant-green);
+}
+
+/* Custom Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px var(--electric-blue-glow); }
+  50% { box-shadow: 0 0 40px var(--electric-blue-glow), 0 0 60px var(--vibrant-green); }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 5s ease infinite;
+}
+
+/* Glassmorphism Effect */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(124, 252, 0, 0.2);
+}
+
+/* Section Base Styles */
+section {
+  position: relative;
+  /* Removed flex centering to allow proper padding behavior */
+  /* Components can add min-height and flex as needed */
+}
+
+/* Cosmic Background Pattern */
+.cosmic-bg {
+  background: 
+    radial-gradient(ellipse at 20% 80%, rgba(45, 27, 78, 0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(0, 191, 255, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(124, 252, 0, 0.1) 0%, transparent 70%),
+    var(--space-dark);
+}
+
+/* Card Hover Effects */
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 40px rgba(124, 252, 0, 0.3);
+}
+
+/* Button Styles */
+.btn-primary {
+  background: linear-gradient(135deg, var(--vibrant-green), var(--electric-blue));
+  color: var(--space-dark);
+  font-weight: 700;
+  padding: 12px 32px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px var(--vibrant-green);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--vibrant-green);
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: 50px;
+  border: 2px solid var(--vibrant-green);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--vibrant-green);
+  color: var(--space-dark);
+}
+
+/* Lock Icon Animation */
+@keyframes lock-shake {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+.lock-shake:hover {
+  animation: lock-shake 0.3s ease-in-out;
+}
