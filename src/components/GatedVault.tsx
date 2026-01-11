@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAccount } from 'wagmi';
 import { useNFTGate } from '../hooks/useNFTGate';
+import VaultHelperVideo from './VaultHelperVideo';
 
 export default function GatedVault() {
   const ref = useRef(null);
@@ -123,6 +124,13 @@ export default function GatedVault() {
             </div>
           )}
         </motion.div>
+
+        {/* Helper Video */}
+        <VaultHelperVideo 
+          videoSrc="/videos/vault_access_video_with_bunny.mp4"
+          title="How to Access The Vault"
+          description="Watch this tutorial to learn how to connect your wallet and access the exclusive NFT-gated video conference room."
+        />
       </div>
     </section>
   );
