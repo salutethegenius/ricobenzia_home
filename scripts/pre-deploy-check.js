@@ -5,9 +5,9 @@
  * Runs before deploying to production to ensure everything is ready
  */
 
-const { execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+import { execSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
 
 const colors = {
   reset: '\x1b[0m',
