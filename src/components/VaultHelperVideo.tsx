@@ -41,7 +41,7 @@ export default function VaultHelperVideo({
           >
             {title}
           </h3>
-          <p className="text-clean-white/60 max-w-2xl mx-auto text-center" style={{ textAlign: 'center', width: '100%' }}>
+          <p className="text-clean-white/60 max-w-2xl mx-auto">
             {description}
           </p>
         </div>
