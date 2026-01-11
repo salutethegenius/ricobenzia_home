@@ -87,7 +87,7 @@ async function loadEventsFromSupabase(): Promise<Event[] | null> {
 
     if (error) throw error;
     return data as Event[];
-  } catch (error) {
+  } catch {
     // Table might not exist yet, that's okay
     return null;
   }
@@ -145,7 +145,7 @@ export async function saveEvents(events: Event[]): Promise<{ error: string | nul
         updateExportedEvents(events);
         window.dispatchEvent(new CustomEvent('eventsUpdated', { detail: events }));
         return { error: null };
-      } catch (localError) {
+      } catch {
         const errorMessage = error instanceof Error ? error.message : 'Failed to save events';
         return { error: errorMessage };
       }

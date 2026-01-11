@@ -46,15 +46,15 @@ export default function EventCalendar() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-12" style={{ textAlign: 'center' }}
         >
           <h2 
-            className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-electric-blue to-vibrant-green bg-clip-text text-transparent"
-            style={{ fontFamily: 'Orbitron, sans-serif' }}
+            className="text-4xl md:text-5xl font-bold mb-4 text-center bg-gradient-to-r from-electric-blue to-vibrant-green bg-clip-text text-transparent"
+            style={{ fontFamily: 'Orbitron, sans-serif' , textAlign: 'center', width: '100%' }}
           >
             Event Calendar
           </h2>
-          <p className="text-clean-white/70 text-lg max-w-2xl mx-auto">
+          <p className="text-clean-white/70 text-lg max-w-2xl mx-auto text-center" style={{ textAlign: 'center', width: '100%' }}>
             Join us for upcoming events, AMAs, workshops, and community gatherings
           </p>
         </motion.div>
