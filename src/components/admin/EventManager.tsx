@@ -251,29 +251,30 @@ export default function EventManager() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[100] bg-space-dark/95 backdrop-blur-md flex items-center justify-center p-4"
+              className="fixed inset-0 z-[100] bg-space-dark/95 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto"
               onClick={resetForm}
             >
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-gradient-to-br from-cosmic-purple to-space-dark rounded-2xl p-8 max-w-2xl w-full border border-vibrant-green/50 shadow-2xl max-h-[90vh] overflow-y-auto"
+                className="bg-gradient-to-br from-cosmic-purple to-space-dark rounded-xl md:rounded-2xl p-4 md:p-8 max-w-2xl w-full border border-vibrant-green/50 shadow-2xl max-h-[90vh] overflow-y-auto my-4 md:my-8"
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-clean-white" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+                <div className="flex items-center justify-between mb-4 md:mb-6">
+                  <h2 className="text-xl md:text-2xl font-bold text-clean-white" style={{ fontFamily: 'Orbitron, sans-serif' }}>
                     {editingEvent ? 'Edit Event' : 'Create New Event'}
                   </h2>
                   <button
                     onClick={resetForm}
-                    className="text-clean-white/70 hover:text-clean-white text-3xl transition-colors"
+                    className="text-clean-white/70 hover:text-clean-white text-2xl md:text-3xl transition-colors touch-manipulation"
+                    aria-label="Close"
                   >
                     ×
                   </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
                   <div>
                     <label className="block text-clean-white/80 mb-2 font-semibold">
                       Title <span className="text-red-400">*</span>
@@ -284,14 +285,14 @@ export default function EventManager() {
                       value={formData.title}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 rounded-lg bg-clean-white/5 border border-clean-white/10 text-clean-white focus:border-vibrant-green focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 md:py-3 rounded-lg bg-clean-white/5 border border-clean-white/10 text-clean-white focus:border-vibrant-green focus:outline-none transition-colors text-base"
                       placeholder="Community AMA"
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                     <div>
-                      <label className="block text-clean-white/80 mb-2 font-semibold">
+                      <label className="block text-clean-white/80 mb-2 font-semibold text-sm md:text-base">
                         Date <span className="text-red-400">*</span>
                       </label>
                       <input
@@ -300,12 +301,12 @@ export default function EventManager() {
                         value={formData.date}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-lg bg-clean-white/5 border border-clean-white/10 text-clean-white focus:border-vibrant-green focus:outline-none transition-colors"
+                        className="w-full px-4 py-3 rounded-lg bg-clean-white/5 border border-clean-white/10 text-clean-white focus:border-vibrant-green focus:outline-none transition-colors text-base"
                       />
                       <p className="text-clean-white/50 text-xs mt-1">Format: YYYY-MM-DD</p>
                     </div>
                     <div>
-                      <label className="block text-clean-white/80 mb-2 font-semibold">
+                      <label className="block text-clean-white/80 mb-2 font-semibold text-sm md:text-base">
                         Time <span className="text-red-400">*</span>
                       </label>
                       <input
@@ -314,7 +315,7 @@ export default function EventManager() {
                         value={formData.time}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-lg bg-clean-white/5 border border-clean-white/10 text-clean-white focus:border-vibrant-green focus:outline-none transition-colors"
+                        className="w-full px-4 py-3 rounded-lg bg-clean-white/5 border border-clean-white/10 text-clean-white focus:border-vibrant-green focus:outline-none transition-colors text-base"
                         placeholder="2:00 PM EST"
                       />
                     </div>
@@ -330,7 +331,7 @@ export default function EventManager() {
                       onChange={handleInputChange}
                       required
                       rows={4}
-                      className="w-full px-4 py-3 rounded-lg bg-clean-white/5 border border-clean-white/10 text-clean-white focus:border-vibrant-green focus:outline-none transition-colors resize-none"
+                      className="w-full px-4 py-3 rounded-lg bg-clean-white/5 border border-clean-white/10 text-clean-white focus:border-vibrant-green focus:outline-none transition-colors resize-none text-base"
                       placeholder="Event description..."
                     />
                   </div>
@@ -354,22 +355,25 @@ export default function EventManager() {
                       Image URL (Optional)
                     </label>
                     <input
-                      type="url"
+                      type="text"
                       name="image"
                       value={formData.image}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 rounded-lg bg-clean-white/5 border border-clean-white/10 text-clean-white focus:border-vibrant-green focus:outline-none transition-colors"
-                      placeholder="https://..."
+                      placeholder="/assets/filename.jpg or https://..."
                     />
+                    <p className="text-clean-white/50 text-xs mt-1">
+                      Use local path like <code className="text-electric-blue">/assets/fishing-da-market.jpg</code> or external URL
+                    </p>
                   </div>
 
-                  <div className="flex gap-4 pt-4">
+                  <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-4">
                     <motion.button
                       type="submit"
                       disabled={saving}
                       whileHover={{ scale: saving ? 1 : 1.02 }}
                       whileTap={{ scale: saving ? 1 : 0.98 }}
-                      className="flex-1 px-6 py-3 rounded-lg bg-gradient-to-r from-electric-blue to-vibrant-green text-space-dark font-bold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-1 px-6 py-3 rounded-lg bg-gradient-to-r from-electric-blue to-vibrant-green text-space-dark font-bold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation text-base"
                     >
                       {saving ? 'Saving...' : editingEvent ? 'Update Event' : 'Create Event'}
                     </motion.button>
@@ -378,7 +382,7 @@ export default function EventManager() {
                       onClick={resetForm}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className="px-6 py-3 rounded-lg bg-clean-white/5 border border-clean-white/10 text-clean-white hover:border-clean-white/30 transition-colors"
+                      className="px-6 py-3 rounded-lg bg-clean-white/5 border border-clean-white/10 text-clean-white hover:border-clean-white/30 transition-colors touch-manipulation text-base"
                     >
                       Cancel
                     </motion.button>
