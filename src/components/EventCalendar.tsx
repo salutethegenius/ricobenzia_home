@@ -29,15 +29,24 @@ export default function EventCalendar() {
     
     fetchEvents();
 
-    // Listen for events updates
+    // Listen for events updates (works when admin portal is on same page)
     const handleEventsUpdate = () => {
       // Clear cache and reload events when updates occur
       fetchEvents();
     };
     window.addEventListener('eventsUpdated', handleEventsUpdate);
     
+    // Refresh when page becomes visible (helps when navigating from admin portal)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchEvents();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
     return () => {
       window.removeEventListener('eventsUpdated', handleEventsUpdate);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
