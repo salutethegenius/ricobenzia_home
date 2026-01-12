@@ -29,54 +29,8 @@ function loadEventsFromLocalStorage(): Event[] | null {
   return null;
 }
 
-// Load events from JSON file
-export async function loadEvents(): Promise<Event[]> {
-  // Check cache first
-  if (eventsCache) {
-    return eventsCache;
-  }
-
-  // Try to load from localStorage first (most recent)
-  const localEvents = loadEventsFromLocalStorage();
-  if (localEvents && localEvents.length > 0) {
-    eventsCache = localEvents;
-    // Update exported events array synchronously
-    updateExportedEvents(localEvents);
-    return eventsCache;
-  }
-
-  try {
-    // Try to load from Supabase (if available)
-    const supabaseEvents = await loadEventsFromSupabase();
-    if (supabaseEvents && supabaseEvents.length > 0) {
-      eventsCache = supabaseEvents;
-      updateExportedEvents(supabaseEvents);
-      return eventsCache;
-    }
-  } catch (error) {
-    console.warn('Failed to load events from Supabase, falling back to JSON:', error);
-  }
-
-  // Fallback to JSON file
-  try {
-    const response = await fetch('/data/events.json');
-    if (!response.ok) {
-      throw new Error('Failed to fetch events.json');
-    }
-    const data: EventsData = await response.json();
-    eventsCache = data.events || [];
-    updateExportedEvents(eventsCache);
-    return eventsCache;
-  } catch (error) {
-    console.error('Failed to load events from JSON:', error);
-    // Return empty array as fallback
-    eventsCache = [];
-    updateExportedEvents([]);
-    return [];
-  }
-}
-
 // Load events from Supabase
+// Returns array if successful (empty array means no events), null if failed
 async function loadEventsFromSupabase(): Promise<Event[] | null> {
   try {
     const { supabase } = await import('../lib/supabase');
@@ -86,11 +40,81 @@ async function loadEventsFromSupabase(): Promise<Event[] | null> {
       .order('date', { ascending: true });
 
     if (error) throw error;
-    return data as Event[];
-  } catch {
-    // Table might not exist yet, that's okay
+    // If data is null, return null (error case)
+    // If data is an array (even if empty), return it (success case)
+    return data ? (data as Event[]) : null;
+  } catch (error) {
+    // Table might not exist yet, or connection failed
+    console.warn('Failed to load events from Supabase:', error);
     return null;
   }
+}
+
+// Load events from JSON file
+async function loadEventsFromJSON(): Promise<Event[] | null> {
+  try {
+    const response = await fetch('/data/events.json');
+    if (!response.ok) {
+      throw new Error('Failed to fetch events.json');
+    }
+    const data: EventsData = await response.json();
+    return data.events || null;
+  } catch (error) {
+    console.warn('Failed to load events from JSON:', error);
+    return null;
+  }
+}
+
+// Load events - prioritizes Supabase, then localStorage, then JSON
+export async function loadEvents(forceRefresh: boolean = false): Promise<Event[]> {
+  // Clear cache if force refresh is requested
+  if (forceRefresh) {
+    eventsCache = null;
+  }
+
+  // Check cache first (unless force refresh)
+  if (eventsCache && !forceRefresh) {
+    return eventsCache;
+  }
+
+  // Priority 1: Try to load from Supabase first
+  try {
+    const supabaseEvents = await loadEventsFromSupabase();
+    // If supabaseEvents is not null, use it (even if empty array - means Supabase succeeded but no events)
+    if (supabaseEvents !== null) {
+      eventsCache = supabaseEvents;
+      updateExportedEvents(supabaseEvents);
+      return eventsCache;
+    }
+    // If supabaseEvents is null, Supabase failed, so fall through to localStorage
+  } catch (error) {
+    console.warn('Failed to load events from Supabase, trying localStorage:', error);
+  }
+
+  // Priority 2: Fallback to localStorage
+  const localEvents = loadEventsFromLocalStorage();
+  if (localEvents && localEvents.length > 0) {
+    eventsCache = localEvents;
+    updateExportedEvents(localEvents);
+    return eventsCache;
+  }
+
+  // Priority 3: Fallback to JSON file
+  try {
+    const jsonEvents = await loadEventsFromJSON();
+    if (jsonEvents) {
+      eventsCache = jsonEvents;
+      updateExportedEvents(jsonEvents);
+      return eventsCache;
+    }
+  } catch (error) {
+    console.warn('Failed to load events from JSON:', error);
+  }
+
+  // Return empty array as final fallback
+  eventsCache = [];
+  updateExportedEvents([]);
+  return [];
 }
 
 // Save events to Supabase
@@ -155,7 +179,13 @@ export async function saveEvents(events: Event[]): Promise<{ error: string | nul
 // Clear cache (useful for refreshing)
 export function clearEventsCache(): void {
   eventsCache = null;
-  updateExportedEvents([]);
+  // Don't clear the exported events array here - let loadEvents handle it
+}
+
+// Refresh events by clearing cache and reloading
+export async function refreshEvents(): Promise<Event[]> {
+  clearEventsCache();
+  return await loadEvents(true);
 }
 
 // Get events (synchronous for backward compatibility, loads from cache)
@@ -191,30 +221,19 @@ loadEvents().then(loadedEvents => {
   updateExportedEvents([]);
 });
 
-// Helper function to get upcoming events
-export const getUpcomingEvents = (): Event[] => {
+// Helper function to get events from the current year
+// Automatically rolls over to the next year when the calendar year changes
+export const getUpcomingEvents = (eventsList?: Event[]): Event[] => {
   const now = new Date();
-  const currentEvents = events.length > 0 ? events : getEvents();
+  const currentYear = now.getFullYear(); // Dynamically gets the current year
+  const currentEvents = eventsList || (events.length > 0 ? events : getEvents());
   return currentEvents
     .filter(event => {
       try {
-        // Try to parse the date and time
-        const timeMatch = event.time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-        if (timeMatch) {
-          let hours = parseInt(timeMatch[1]);
-          const minutes = parseInt(timeMatch[2]);
-          const ampm = timeMatch[3].toUpperCase();
-          
-          if (ampm === 'PM' && hours !== 12) hours += 12;
-          if (ampm === 'AM' && hours === 12) hours = 0;
-          
-          const eventDate = new Date(event.date);
-          eventDate.setHours(hours, minutes, 0, 0);
-          return eventDate > now;
-        }
-        // Fallback: just compare dates
+        // Filter events to show only events from the current year (automatically updates each year)
         const eventDate = new Date(event.date);
-        return eventDate >= new Date(now.toDateString());
+        const eventYear = eventDate.getFullYear();
+        return eventYear === currentYear;
       } catch {
         // If parsing fails, include the event
         return true;
@@ -232,12 +251,27 @@ export const getUpcomingEvents = (): Event[] => {
 };
 
 // Helper function to format date
+// Fixes timezone issue by parsing date string directly instead of using Date constructor
 export const formatEventDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  try {
+    // Parse YYYY-MM-DD format directly to avoid timezone issues
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day); // month is 0-indexed in Date constructor
+    
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  } catch {
+    // Fallback to original method if parsing fails
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
 };
