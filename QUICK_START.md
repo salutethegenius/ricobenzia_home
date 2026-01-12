@@ -90,6 +90,7 @@ Create-Hotfix "fix-description"
 
 ## 📚 Full Documentation
 
+- **`DEV_WORKFLOW.md`** - Complete development workflow guide
 - **`WORKFLOW_SETUP.md`** - Complete setup instructions
 - **`GIT_WORKFLOW.md`** - Detailed workflow guide
 - **`BRANCH_PROTECTION_SETUP.md`** - Branch protection setup

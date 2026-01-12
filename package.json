@@ -7,8 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "type-check": "tsc --noEmit",
     "preview": "vite preview",
-    "pre-deploy": "node scripts/pre-deploy-check.js"
+    "pre-deploy": "node scripts/pre-deploy-check.js",
+    "check": "npm run type-check && npm run lint"
   },
   "dependencies": {
     "@jitsi/react-sdk": "^1.4.4",
