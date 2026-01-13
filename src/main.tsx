@@ -6,6 +6,7 @@ import { WagmiProvider } from 'wagmi';
 import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { polygon } from 'wagmi/chains';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import App from './App';
 import './index.css';
 import '@rainbow-me/rainbowkit/styles.css';
@@ -34,6 +35,7 @@ createRoot(document.getElementById('root')!).render(
             })}
           >
             <App />
+            <SpeedInsights />
           </RainbowKitProvider>
         </QueryClientProvider>
       </WagmiProvider>
