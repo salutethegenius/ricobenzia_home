@@ -1,24 +1,6 @@
 {
   "events": [
     {
-      "id": "test-past-event-2026",
-      "title": "Test Past Event - Should Be Deleted",
-      "date": "2026-01-14",
-      "time": "2:00 PM EST",
-      "description": "This is a test event from 3 days ago. It should be automatically deleted when events are loaded since it's more than 1 day old.",
-      "link": "",
-      "image": ""
-    },
-    {
-      "id": "test-live-event-2026",
-      "title": "Test LIVE Event - Happening Today",
-      "date": "2026-01-17",
-      "time": "3:00 PM EST",
-      "description": "This is a test event happening today. It should show a LIVE badge!",
-      "link": "",
-      "image": ""
-    },
-    {
       "id": "fishing-da-market-2026",
       "title": "Fishing Da Market",
       "date": "2026-02-15",
