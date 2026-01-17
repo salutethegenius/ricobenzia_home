@@ -65,7 +65,25 @@ async function loadEventsFromJSON(): Promise<Event[] | null> {
   }
 }
 
+// Clean up past events from storage (removes events that passed more than 1 day ago)
+async function cleanupPastEvents(eventsList: Event[]): Promise<Event[]> {
+  const filteredEvents = filterPastEvents(eventsList);
+  
+  // If events were filtered out, save the cleaned list back to storage
+  if (filteredEvents.length < eventsList.length) {
+    try {
+      await saveEvents(filteredEvents);
+      console.log(`Cleaned up ${eventsList.length - filteredEvents.length} past event(s)`);
+    } catch (error) {
+      console.warn('Failed to save cleaned events:', error);
+    }
+  }
+  
+  return filteredEvents;
+}
+
 // Load events - prioritizes Supabase, then localStorage, then JSON
+// Automatically cleans up past events (more than 1 day old) when loading
 export async function loadEvents(forceRefresh: boolean = false): Promise<Event[]> {
   // Clear cache if force refresh is requested
   if (forceRefresh) {
@@ -82,8 +100,10 @@ export async function loadEvents(forceRefresh: boolean = false): Promise<Event[]
     const supabaseEvents = await loadEventsFromSupabase();
     // If supabaseEvents is not null, use it (even if empty array - means Supabase succeeded but no events)
     if (supabaseEvents !== null) {
-      eventsCache = supabaseEvents;
-      updateExportedEvents(supabaseEvents);
+      // Clean up past events
+      const cleanedEvents = await cleanupPastEvents(supabaseEvents);
+      eventsCache = cleanedEvents;
+      updateExportedEvents(cleanedEvents);
       return eventsCache;
     }
     // If supabaseEvents is null, Supabase failed, so fall through to localStorage
@@ -94,8 +114,10 @@ export async function loadEvents(forceRefresh: boolean = false): Promise<Event[]
   // Priority 2: Fallback to localStorage
   const localEvents = loadEventsFromLocalStorage();
   if (localEvents && localEvents.length > 0) {
-    eventsCache = localEvents;
-    updateExportedEvents(localEvents);
+    // Clean up past events
+    const cleanedEvents = await cleanupPastEvents(localEvents);
+    eventsCache = cleanedEvents;
+    updateExportedEvents(cleanedEvents);
     return eventsCache;
   }
 
@@ -103,8 +125,10 @@ export async function loadEvents(forceRefresh: boolean = false): Promise<Event[]
   try {
     const jsonEvents = await loadEventsFromJSON();
     if (jsonEvents) {
-      eventsCache = jsonEvents;
-      updateExportedEvents(jsonEvents);
+      // Clean up past events
+      const cleanedEvents = await cleanupPastEvents(jsonEvents);
+      eventsCache = cleanedEvents;
+      updateExportedEvents(cleanedEvents);
       return eventsCache;
     }
   } catch (error) {
@@ -221,8 +245,54 @@ loadEvents().then(loadedEvents => {
   updateExportedEvents([]);
 });
 
+// Helper function to check if an event is happening today (LIVE)
+export const isEventLive = (event: Event): boolean => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to start of day
+    
+    // Parse event date (YYYY-MM-DD format)
+    const [year, month, day] = event.date.split('-').map(Number);
+    const eventDate = new Date(year, month - 1, day);
+    eventDate.setHours(0, 0, 0, 0);
+    
+    // Check if event date is today
+    return eventDate.getTime() === today.getTime();
+  } catch {
+    return false;
+  }
+};
+
+// Helper function to check if an event has passed (more than 1 day ago)
+export const isEventPast = (event: Event): boolean => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to start of day
+    
+    // Parse event date (YYYY-MM-DD format)
+    const [year, month, day] = event.date.split('-').map(Number);
+    const eventDate = new Date(year, month - 1, day);
+    eventDate.setHours(0, 0, 0, 0);
+    
+    // Calculate difference in days
+    const diffTime = today.getTime() - eventDate.getTime();
+    const diffDays = diffTime / (1000 * 60 * 60 * 24);
+    
+    // Event is past if it's more than 1 day ago (i.e., >= 2 days old)
+    return diffDays >= 2;
+  } catch {
+    return false;
+  }
+};
+
+// Helper function to filter out past events (events that passed more than 1 day ago)
+export const filterPastEvents = (eventsList: Event[]): Event[] => {
+  return eventsList.filter(event => !isEventPast(event));
+};
+
 // Helper function to get events from the current year
 // Automatically rolls over to the next year when the calendar year changes
+// Also automatically filters out past events (more than 1 day old)
 export const getUpcomingEvents = (eventsList?: Event[]): Event[] => {
   const now = new Date();
   const currentYear = now.getFullYear(); // Dynamically gets the current year
@@ -239,6 +309,7 @@ export const getUpcomingEvents = (eventsList?: Event[]): Event[] => {
         return true;
       }
     })
+    .filter(event => !isEventPast(event)) // Filter out past events (more than 1 day old)
     .sort((a, b) => {
       try {
         const dateA = new Date(a.date);

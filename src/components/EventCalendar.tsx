@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { loadEvents, getUpcomingEvents, formatEventDate, clearEventsCache, type Event } from '../data/events';
+import { loadEvents, getUpcomingEvents, formatEventDate, clearEventsCache, isEventLive, type Event } from '../data/events';
 
 export default function EventCalendar() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -126,9 +126,21 @@ export default function EventCalendar() {
                 
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="text-lg md:text-xl font-bold text-clean-white mb-2" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-                      {event.title}
-                    </h3>
+                    <div className="flex items-center gap-2 mb-2">
+                      <h3 className="text-lg md:text-xl font-bold text-clean-white" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+                        {event.title}
+                      </h3>
+                      {isEventLive(event) && (
+                        <motion.span
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="px-2 py-1 text-xs font-bold text-space-dark bg-vibrant-green rounded-full animate-pulse"
+                          style={{ fontFamily: 'Orbitron, sans-serif' }}
+                        >
+                          LIVE
+                        </motion.span>
+                      )}
+                    </div>
                     <div className="space-y-1.5 md:space-y-2 text-xs md:text-sm text-clean-white/70">
                       <p className="flex items-center gap-2">
                         <span className="text-electric-blue">📅</span>
@@ -219,12 +231,24 @@ export default function EventCalendar() {
                   </div>
                 )}
                 
-                <h3 
-                  className="text-2xl md:text-3xl font-bold text-clean-white mb-3 md:mb-4" 
-                  style={{ fontFamily: 'Orbitron, sans-serif' }}
-                >
-                  {selectedEvent.title}
-                </h3>
+                <div className="flex items-center gap-3 mb-3 md:mb-4">
+                  <h3 
+                    className="text-2xl md:text-3xl font-bold text-clean-white" 
+                    style={{ fontFamily: 'Orbitron, sans-serif' }}
+                  >
+                    {selectedEvent.title}
+                  </h3>
+                  {isEventLive(selectedEvent) && (
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="px-3 py-1 text-sm font-bold text-space-dark bg-vibrant-green rounded-full animate-pulse"
+                      style={{ fontFamily: 'Orbitron, sans-serif' }}
+                    >
+                      LIVE
+                    </motion.span>
+                  )}
+                </div>
                 
                 <div className="space-y-3 md:space-y-4 mb-4 md:mb-6 text-clean-white/80">
                   <p className="flex items-center gap-2 md:gap-3 text-base md:text-lg">
