@@ -6,6 +6,7 @@ import {
   saveEvents, 
   generateEventId, 
   formatEventDate,
+  isEventLive,
   type Event 
 } from '../../data/events';
 
@@ -432,9 +433,21 @@ export default function EventManager() {
                 className="bg-gradient-to-br from-clean-white/5 to-clean-white/[0.02] rounded-xl p-6 border border-clean-white/10 hover:border-vibrant-green/30 transition-all"
               >
                 <div className="mb-4">
-                  <h3 className="text-xl font-bold text-clean-white mb-2" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-                    {event.title}
-                  </h3>
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="text-xl font-bold text-clean-white" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+                      {event.title}
+                    </h3>
+                    {isEventLive(event) && (
+                      <motion.span
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="px-2 py-1 text-xs font-bold text-space-dark bg-vibrant-green rounded-full animate-pulse"
+                        style={{ fontFamily: 'Orbitron, sans-serif' }}
+                      >
+                        LIVE
+                      </motion.span>
+                    )}
+                  </div>
                   <div className="space-y-1 text-sm text-clean-white/70">
                     <p className="flex items-center gap-2">
                       <span className="text-electric-blue">📅</span>
