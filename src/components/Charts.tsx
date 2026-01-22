@@ -3,16 +3,9 @@ import { useInView } from 'framer-motion';
 import { useRef, useEffect } from 'react';
 
 const chartSymbols = [
-  { symbol: 'BTCUSDT', name: 'Bitcoin', color: '#F7931A' },
-  { symbol: 'ETHUSDT', name: 'Ethereum', color: '#627EEA' },
-  { symbol: 'XRPUSDT', name: 'XRP', color: '#0085C3' },
-  { symbol: 'SPELLUSDT', name: 'SPELL', color: '#8B5CF6' },
-  { symbol: 'XLMUSDT', name: 'Stellar', color: '#7D00FF' },
-  { symbol: 'ADAUSDT', name: 'Cardano', color: '#0033AD' },
-  { symbol: 'POLUSDT', name: 'Polygon', color: '#8247E5' },
-  { symbol: 'PIXELUSDT', name: 'Pixels', color: '#00D9FF' },
-  { symbol: 'IMXUSDT', name: 'Immutable X', color: '#5BFFE5' },
-  { symbol: 'BIGTIMEUSDT', name: 'BigTime', color: '#FF6B35' },
+  { symbol: 'BTCUSD', name: 'Bitcoin', color: '#F7931A' },
+  { symbol: 'ETHUSD', name: 'Ethereum', color: '#627EEA' },
+  { symbol: 'XRPUSD', name: 'XRP', color: '#0085C3' },
 ];
 
 const dataResources = [
@@ -181,7 +174,7 @@ export default function Charts() {
             <h3 className="text-xl font-bold text-clean-white">Live Charts</h3>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
             {chartSymbols.map((chart, index) => (
               <motion.div
                 key={chart.symbol}
