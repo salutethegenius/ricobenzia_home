@@ -9,7 +9,6 @@ const games = [
     url: 'https://ravenquest.io/register/ref/77080',
     category: 'RPG',
     color: 'from-purple-600 to-indigo-600',
-    logo: '/assets/logos/games/ravenquest.webp',
   },
   {
     name: 'Raven Idle',
@@ -17,7 +16,6 @@ const games = [
     url: 'https://game.ravenidle.com/en/auth/register?referralCode=12992ac7-5a61-4cb6-bbd0-4d77f62c3099',
     category: 'Idle',
     color: 'from-indigo-600 to-blue-600',
-    logo: '/assets/logos/games/ravenidle.png',
   },
   {
     name: 'Gods Unchained',
@@ -25,7 +23,6 @@ const games = [
     url: 'https://godsunchained.com',
     category: 'Card Game',
     color: 'from-amber-600 to-orange-600',
-    logo: '/assets/logos/games/godsunchained.png',
   },
   {
     name: 'Pixels',
@@ -33,7 +30,6 @@ const games = [
     url: 'https://play.pixels.xyz',
     category: 'Farming',
     color: 'from-green-600 to-emerald-600',
-    logo: '/assets/logos/games/pixels.png',
   },
   {
     name: 'Mobox',
@@ -41,7 +37,6 @@ const games = [
     url: 'https://www.mobox.io/#/cmcairdrop?source=14027073',
     category: 'Platform',
     color: 'from-blue-600 to-cyan-600',
-    logo: '/assets/logos/games/mobox.png',
   },
   {
     name: 'IMX Games',
@@ -49,7 +44,6 @@ const games = [
     url: 'https://play.immutable.com/referral/share/rmDgCl?utm_source=referral',
     category: 'Ecosystem',
     color: 'from-cyan-600 to-teal-600',
-    logo: '/assets/logos/games/imx.jpg',
   },
   {
     name: 'Pixel Dungeons',
@@ -57,15 +51,6 @@ const games = [
     url: 'https://pixeldungeons.xyz/?ref=3wxh461o8dwa3dsf',
     category: 'Adventure',
     color: 'from-rose-600 to-pink-600',
-    logo: '/assets/logos/games/pixeldungeons.png',
-  },
-  {
-    name: 'Ape Reunion',
-    description: 'Community-built web3 metaverse game with NFT collections.',
-    url: 'https://www.apereunion.xyz/',
-    category: 'Metaverse',
-    color: 'from-violet-600 to-fuchsia-600',
-    logo: '/assets/ruionape.webp',
   },
 ];
 
@@ -137,20 +122,6 @@ export default function Gameroom() {
               {/* Content */}
               <div className="relative p-6 min-h-[180px] flex flex-col justify-between">
                 <div>
-                  {/* Logo */}
-                  {game.logo && (
-                    <div className="mb-3 flex justify-center">
-                      <img 
-                        src={game.logo} 
-                        alt={`${game.name} logo`}
-                        className="h-10 w-auto object-contain max-w-full"
-                        onError={(e) => {
-                          // Hide image if it fails to load
-                          (e.target as HTMLImageElement).style.display = 'none';
-                        }}
-                      />
-                    </div>
-                  )}
                   <span className="text-xs px-3 py-1 rounded-full bg-clean-white/20 text-clean-white font-medium">
                     {game.category}
                   </span>

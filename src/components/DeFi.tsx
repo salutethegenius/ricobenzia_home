@@ -2,15 +2,14 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 
-type Category = 'all' | 'cex' | 'dex' | 'yield' | 'social' | 'wallet';
+type Category = 'all' | 'cex' | 'dex' | 'yield';
 
 interface Project {
   name: string;
   description: string;
   url: string;
-  category: 'cex' | 'dex' | 'yield' | 'social' | 'wallet';
+  category: 'cex' | 'dex' | 'yield';
   status?: string;
-  logo?: string;
 }
 
 const centralizedExchanges: Project[] = [
@@ -19,28 +18,24 @@ const centralizedExchanges: Project[] = [
     description: 'World\'s largest crypto exchange by volume.',
     url: 'https://accounts.binance.com/register?ref=RICOBENZ',
     category: 'cex',
-    logo: '/assets/logos/binance.webp',
   },
   {
     name: 'Blofin',
     description: 'Advanced trading platform for crypto derivatives.',
     url: '#',
     category: 'cex',
-    logo: '/assets/logos/blofin.webp',
   },
   {
     name: 'Crypto.com',
     description: 'All-in-one crypto platform with card services.',
     url: '#',
     category: 'cex',
-    logo: '/assets/logos/cryptocom.png', // Note: Needs manual replacement - file is corrupted
   },
   {
     name: 'RedotPay',
     description: 'Crypto payment solutions for everyday use.',
     url: '#',
     category: 'cex',
-    logo: '/assets/logos/redotpay.webp',
   },
 ];
 
@@ -50,28 +45,24 @@ const decentralizedExchanges: Project[] = [
     description: 'Leading DEX on Ethereum with deep liquidity.',
     url: 'https://app.uniswap.org',
     category: 'dex',
-    logo: '/assets/logos/uniswap.png', // Note: Needs manual replacement - file is corrupted
   },
   {
     name: 'StellarX (XLM)',
     description: 'User-friendly interface for the Stellar DEX.',
     url: 'https://www.stellarx.com',
     category: 'dex',
-    logo: '/assets/logos/stellarx.webp',
   },
   {
     name: 'Sologenic (XRPL)',
     description: 'Trade tokenized assets on the XRP Ledger.',
     url: 'https://sologenic.org/',
     category: 'dex',
-    logo: '/assets/logos/sologenic.webp',
   },
   {
     name: 'Cosmos',
     description: 'A universe of blockchains in one wallet.',
     url: 'https://cosmos.network/',
     category: 'dex',
-    logo: '/assets/logos/cosmos.png', // Note: Needs manual replacement - file is corrupted
   },
 ];
 
@@ -81,21 +72,18 @@ const yieldFarming: Project[] = [
     description: 'Liquidity management for Stellar network.',
     url: 'https://aqua.network/',
     category: 'yield',
-    logo: '/assets/logos/aquarius.webp',
   },
   {
     name: 'Pixels Staking',
     description: 'Stake your PIXEL tokens for rewards.',
     url: 'https://staking.pixels.xyz/',
     category: 'yield',
-    logo: '/assets/logos/pixelsstaking.webp',
   },
   {
     name: 'C.R.E.A.M. Finance',
     description: 'DeFi lending and borrowing protocol.',
     url: 'https://cream.finance/',
     category: 'yield',
-    logo: '/assets/logos/cream.webp',
   },
   {
     name: 'Abracadabra.money',
@@ -103,52 +91,16 @@ const yieldFarming: Project[] = [
     url: 'https://abracadabra.money/',
     category: 'yield',
     status: 'Vetting',
-    logo: '/assets/logos/abracadabra.png', // Note: Needs manual replacement - file is corrupted
-  },
-  {
-    name: 'Ether.fi',
-    description: 'Liquid staking and restaking protocol for Ethereum.',
-    url: 'https://www.ether.fi/refer/50c54ad1',
-    category: 'yield',
-    logo: '/assets/etherfi.png',
   },
 ];
 
-const socialMedia: Project[] = [
-  {
-    name: 'Ibird.io',
-    description: 'Social media platform built on Hedera network.',
-    url: 'https://ibird.io/',
-    category: 'social',
-    logo: '/assets/ibird.jpg',
-  },
-];
-
-const wallets: Project[] = [
-  {
-    name: 'HashPack',
-    description: 'Non-custodial wallet for Hedera ecosystem with NFT and dApp support.',
-    url: 'https://www.hashpack.app/',
-    category: 'wallet',
-    logo: '/assets/hashpack.webp',
-  },
-];
-
-const allProjects = [
-  ...centralizedExchanges, 
-  ...decentralizedExchanges, 
-  ...yieldFarming,
-  ...socialMedia,
-  ...wallets,
-];
+const allProjects = [...centralizedExchanges, ...decentralizedExchanges, ...yieldFarming];
 
 const categories = [
   { id: 'all' as Category, label: 'All Projects', count: allProjects.length },
   { id: 'cex' as Category, label: 'Exchanges (CEX)', count: centralizedExchanges.length },
   { id: 'dex' as Category, label: 'DEX', count: decentralizedExchanges.length },
   { id: 'yield' as Category, label: 'Yield Farming', count: yieldFarming.length },
-  { id: 'social' as Category, label: 'Social Media', count: socialMedia.length },
-  { id: 'wallet' as Category, label: 'Wallets', count: wallets.length },
 ];
 
 export default function DeFi() {
@@ -165,8 +117,6 @@ export default function DeFi() {
       case 'cex': return 'bg-electric-blue/20 text-electric-blue';
       case 'dex': return 'bg-vibrant-green/20 text-vibrant-green-dark';
       case 'yield': return 'bg-cosmic-purple/20 text-cosmic-purple';
-      case 'social': return 'bg-pink-500/20 text-pink-400';
-      case 'wallet': return 'bg-blue-500/20 text-blue-400';
       default: return 'bg-space-dark/20 text-space-dark';
     }
   };
@@ -262,21 +212,6 @@ export default function DeFi() {
                   <span className="text-xs px-2 py-1 rounded-full bg-amber-500/20 text-amber-400 font-medium">
                     {project.status}
                   </span>
-                </div>
-              )}
-              
-              {/* Logo */}
-              {project.logo && (
-                <div className="mb-3 flex justify-center">
-                  <img 
-                    src={project.logo} 
-                    alt={`${project.name} logo`}
-                    className="h-12 w-auto object-contain max-w-full"
-                    onError={(e) => {
-                      // Hide image if it fails to load
-                      (e.target as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
                 </div>
               )}
               
